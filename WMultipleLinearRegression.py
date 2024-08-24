@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 np.random.seed(0)
 sqft = np.random.randint(1000, 3000, 1000)  # Sample square footage
 bedrooms = np.random.randint(1, 5, 1000)  # Sample number of bedrooms
-price = 50 * sqft + 10000 * bedrooms + np.random.normal(0, 5000, 1000)  # Sample price (with some noise)
+price = (
+    50 * sqft + 10000 * bedrooms + np.random.normal(0, 5000, 1000)
+)  # Sample price (with some noise)
 
 sqft_train = sqft
 bedrooms_train = bedrooms
@@ -40,37 +42,44 @@ num_iterations = 10000
 for i in range(num_iterations):
     # Compute predictions
     predictions = np.dot(X, weights)
-    
+
     # Compute error
     error = predictions - price
-    
+
     # Compute gradients
-    gradients = 1/len(price) * np.dot(X.T, error)
-    
+    gradients = 1 / len(price) * np.dot(X.T, error)
+
     # Update weights
     weights = weights - learning_rate * gradients
 
 # Denormalize weights
-intercept = weights[0][0] - weights[1][0] * sqft_mean / sqft_std - weights[2][0] * bedrooms_mean / bedrooms_std
+intercept = (
+    weights[0][0]
+    - weights[1][0] * sqft_mean / sqft_std
+    - weights[2][0] * bedrooms_mean / bedrooms_std
+)
 slope_sqft = weights[1][0] / sqft_std
 slope_bedrooms = weights[2][0] / bedrooms_std
 
 # Plot the data and regression plane (projected on sqft and price)
 fig = plt.figure(figsize=(8, 6))
-ax = fig.add_subplot(111, projection='3d')
-ax.scatter(sqft_train, bedrooms_train, price_train, color='blue', label='Data')
+ax = fig.add_subplot(111, projection="3d")
+ax.scatter(sqft_train, bedrooms_train, price_train, color="blue", label="Data")
 
 # Create a grid for sqft and bedrooms
-sqft_grid, bedrooms_grid = np.meshgrid(np.linspace(sqft.min(), sqft.max(), 10), np.linspace(bedrooms.min(), bedrooms.max(), 10))
+sqft_grid, bedrooms_grid = np.meshgrid(
+    np.linspace(sqft.min(), sqft.max(), 10),
+    np.linspace(bedrooms.min(), bedrooms.max(), 10),
+)
 price_grid = intercept + slope_sqft * sqft_grid + slope_bedrooms * bedrooms_grid
 
 # Plot the regression plane
-ax.plot_surface(sqft_grid, bedrooms_grid, price_grid, color='red', alpha=0.5)
+ax.plot_surface(sqft_grid, bedrooms_grid, price_grid, color="red", alpha=0.5)
 
-ax.set_title('Square Footage, Bedrooms vs. Price')
-ax.set_xlabel('Square Footage')
-ax.set_ylabel('Bedrooms')
-ax.set_zlabel('Price')
+ax.set_title("Square Footage, Bedrooms vs. Price")
+ax.set_xlabel("Square Footage")
+ax.set_ylabel("Bedrooms")
+ax.set_zlabel("Price")
 ax.legend()
 plt.show()
 
@@ -83,7 +92,11 @@ predicted_prices = intercept + slope_sqft * new_sqft + slope_bedrooms * new_bedr
 
 print("Predicted prices:")
 for i in range(len(new_sqft)):
-    print(f"Square Footage: {new_sqft[i][0]}, Bedrooms: {new_bedrooms[i][0]}, Predicted Price: {predicted_prices[i][0]:.2f}")
+    print(
+        f"Square Footage: {new_sqft[i][0]}, Bedrooms: {new_bedrooms[i][0]}, Predicted Price: {predicted_prices[i][0]:.2f}"
+    )
 
 # Print the equation of the regression plane
-print(f"Regression equation: Price = {intercept:.2f} + {slope_sqft:.2f} * sqft + {slope_bedrooms:.2f} * bedrooms")
+print(
+    f"Regression equation: Price = {intercept:.2f} + {slope_sqft:.2f} * sqft + {slope_bedrooms:.2f} * bedrooms"
+)
