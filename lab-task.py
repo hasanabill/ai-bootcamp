@@ -32,7 +32,7 @@ num_doors = num_doors.reshape(-1, 1)
 price = price.reshape(-1, 1)
 
 
-# Step 2: Normalize the features
+# Normalize the features
 def normalize(feature):
     mean = np.mean(feature)
     std = np.std(feature)
