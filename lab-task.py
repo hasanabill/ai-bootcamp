@@ -7,6 +7,13 @@ engine_size = np.random.choice([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5], 100)
 horsepower = np.random.randint(70, 400, 100)
 vehicle_age = np.random.randint(1, 20, 100)
 num_doors = np.random.randint(2, 5, 100)
+price = (
+    10000 * engine_size
+    + 5000 * horsepower
+    + 1000 * vehicle_age
+    + 500 * num_doors
+    + np.random.normal(0, 5000, 100)
+)
 
 # print(engine_size)
 
@@ -14,6 +21,7 @@ engine_size_train = engine_size
 horsepower_train = horsepower
 vehicle_age_train = vehicle_age
 num_doors_train = num_doors
+price_train = price
 
 
 # Reshape the data to be column vectors
@@ -21,20 +29,7 @@ engine_size = engine_size.reshape(-1, 1)
 horsepower = horsepower.reshape(-1, 1)
 vehicle_age = vehicle_age.reshape(-1, 1)
 num_doors = num_doors.reshape(-1, 1)
-
-# Randomly assigned coefficients for generating the price
-true_coefficients = np.array([1000, 15000, 100, -800, 500])
-noise = np.random.normal(0, 1000, 100)
-
-# Combine the features into a single matrix X (with an added bias term)
-X = np.hstack(
-    [np.ones_like(engine_size), engine_size, horsepower, vehicle_age, num_doors]
-)
-
-# Calculate the car price using the linear model with noise
-price = X @ true_coefficients + noise
-
-# print(price)
+price = price.reshape(-1, 1)
 
 
 # Step 2: Normalize the features
@@ -75,7 +70,7 @@ for i in range(num_iterations):
     gradients = 1 / len(price) * np.dot(X_normalized.T, error)
     weights = weights - learning_rate * gradients
 
-# Step 5: Denormalize weights
+# Denormalize weights
 intercept = (
     weights[0][0]
     - weights[1][0] * engine_size_mean / engine_size_std
@@ -91,7 +86,7 @@ slope_num_doors = weights[4][0] / num_doors_std
 # Regression Plane
 fig = plt.figure(figsize=(8, 6))
 ax = fig.add_subplot(111, projection="3d")
-ax.scatter(engine_size_train, horsepower_train, price, color="blue", label="Data")
+ax.scatter(engine_size_train, horsepower_train, price_train, color="blue", label="Data")
 
 # grid for Engine Size and Horsepower
 engine_size_grid, horsepower_grid = np.meshgrid(
