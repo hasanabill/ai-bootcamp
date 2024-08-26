@@ -8,17 +8,13 @@ horsepower = np.random.randint(70, 400, 100)
 vehicle_age = np.random.randint(1, 20, 100)
 num_doors = np.random.randint(2, 5, 100)
 price = (
-    100 * engine_size
-    + 500 * horsepower
-    + 10 * vehicle_age
-    + 5 * num_doors
+    240 * engine_size
+    + 115 * horsepower
+    + 5 * vehicle_age
+    + 30 * num_doors
     + np.random.normal(0, 5000, 100)
 )
 
-# Scale and shift the price to range from 10000 to 50000
-price = 10000 + (price - np.min(price)) * (50000 - 10000) / (
-    np.max(price) - np.min(price)
-)
 
 # print(engine_size)
 
